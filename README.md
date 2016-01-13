@@ -1,5 +1,5 @@
 # EasyCheckData-PHP
-For an easy check variable in PHP
+Simple check of data
 
 This class helps you to check data and print errors.
 ### How to use
