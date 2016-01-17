@@ -10,7 +10,8 @@ require_once 'src/EasyCheckData.php';
 ```
 
 ## Usage
-# For many/single variable
+### setVar($var, $nameField) 
+For many/single variable
 Create the object
 ```
 $ECD = new EasyCheckData();
@@ -23,88 +24,88 @@ and after for print errors of all data
 ```
 echo(implode("<br>", $ECD->getFirstErrors()));
 ```
-# Another method for a single variable
+### Another method for a single variable
 ```
 $ECD = new EasyCheckData($var, "value");
 $ECD->isDef()->minLen(6)->maxLen(30);
 echo $ECD->getFirstError();
 ```
 ## List of Checks
-# isDef()
+### isDef()
 Check if the variable is defined
 ```
 $ECD->isDef();
 ```
-# minLen($len)
+### minLen($len)
 Check if the variable is shorter than $len characters
 ```
 $ECD->minLen(6);
 ```
-# maxLen($len)
+### maxLen($len)
 Check if the variable is longer than $len characters
 ```
 $ECD->maxLen(30);
 ```
-# isEmail()
+### isEmail()
 Check if the variable is an Email
 ```
 $ECD->isEmail();
 ```
-# isEqual($var2, $name="")
+### isEqual($var2, $name="")
 Check if the variable is equal to $var2, $name is optional, for print the name of second element in the error message
 ```
 $ECD->isEqual($pass2, "Repeat Password");
 ```
-# isChecked()
+### isChecked()
 Check if the variable is checked
 ```
 $ECD->isChecked();
 ```
-# isNumber()
+### isNumber()
 Check if the variable is a number
 ```
 $ECD->isNumber();
 ```
 ## Display Errors Methods
-# hasError()
+### hasError()
 Check if there are errors
 ```
 $ECD->hasError();
 ```
-# getFirstError($nameField = null)
+### getFirstError($nameField = null)
 Get you the first error found in $nameField, return String.
 N.B. if $nameField is null, get you the error of last variables checked
 ```
 $ECD->getFirstError();
 ```
-# getFirstsError()
+### getFirstsError()
 Get you the first error of all variable in Object, return Array.
 ```
 $ECD->getFirstsError();
 ```
-# getErrors($nameField = null)
+### getErrors($nameField = null)
 Get you the all errors of the $nameField selected. Return Array.
 N.B. if $nameField is null, get you the error of last variables checked
 ```
 $ECD->getErrors();
 ```
-# getAllErrors()
+### getAllErrors()
 Get you the all errors of the object. Return Array.
 ```
 $ECD->getAllErrors();
 ```
-# static mixAllErrors()
+### static mixAllErrors()
 For join all errors of EasyCheckData objects.
 ```
 EasyCheckData::mixAllErrors($ECD1, $ECD2, ...);
 ```
 ## Config Methods
-# static setLanguage($lang) 
+### static setLanguage($lang) 
 Set the language to print errors, (for now only "it" and "en")
 ```
 EasyCheckData::setLanguage("it");
 ```
-# changeTextError($nameError, $text)
+### changeTextError($nameError, $text)
 For change Errors Text.
 N.B. Control in the code for see how to change (with %NAME%, %LEN% ecc)
 ```
