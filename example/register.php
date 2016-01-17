@@ -16,10 +16,7 @@
 			$ECD->setVar($_POST['email'], "Email")->isDef()->isEmail();
 			$ECD->setVar($_POST['check'], "Terms")->isChecked();
 			$ECD->setVar($_POST['age'], "Age")->isDef()->isNumber();
-			foreach($ECD->getFirstErrors() as $error)
-			{
-				echo $error."<br>";
-			}
+			echo(implode("<br>", $ECD->getFirstErrors()));
 		}
 	?>
 		<form action="" method="post">
