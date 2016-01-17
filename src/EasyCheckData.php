@@ -310,11 +310,3 @@ class EasyCheckData
 		return $this;
 	}
 }
-
-
-/*$avv = new EasyCheckData();
-$var = "cazzo";
-$var1 = "asdsdfreregere";
-print_r($avv->setVar($var, "Succhia")->isDef()->minLen(6)->isNumber()->getErrors());
-$avv->setVar($var1, "Cazzo")->isDef()->minLen(40)->maxLen(8)->isEmail();*/
-
