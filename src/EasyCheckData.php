@@ -19,7 +19,7 @@ class EasyCheckData
 	 * @var string[] Errors in Italian
 	 */
 	private $errorsIt = array(
-		"isDef" => "Il campo %NAME% è vuoto", // Se è vuota
+		"isDef" => "Il campo %NAME% è vuoto", 
 		"minLen" => "Il campo %NAME% deve essere minimo di %LEN% caratteri", 
 		"maxLen" => "Il campo %NAME% deve essere massimo di %LEN% caratteri",
 		"isEmail" => "Il campo %NAME% non è un email corretta",
@@ -29,6 +29,19 @@ class EasyCheckData
 		"isNumber" => "Il campo %NAME% deve essere un numero"
 	);
 
+	/**
+	 * @var string[] Errors in English
+	 */
+	private $errorsEn = array(
+		"isDef" => "The field %NAME% is empty",
+		"minLen" => "The field %NAME% must have at least %LEN% characters", 
+		"maxLen" => "The field %NAME% must have at most %LEN% characters",
+		"isEmail" => "The field %NAME% isn't a valid email",
+		"isEqual1" => "The field %NAME% isn't equal to the field %NAME2%",
+		"isEqual2" => "The field %NAME% isn't equal to the other field",
+		"isChecked" => "The field %NAME% hasn't been selected",
+		"isNumber" => "The field %NAME% must be a number"
+	);
 
 	/**
 	 * @var string 		The language to use
@@ -90,9 +103,10 @@ class EasyCheckData
 			case "it":
 				$this->errors = $this->errorsIt;
 				break;
-
+			case "en":
+				$this->errors = $this->errorsEn;
 			default:
-				$this->errors = $this->errorsIt;
+				$this->errors = $this->errorsEn;
 				break;
 		}
 	}
@@ -111,7 +125,7 @@ class EasyCheckData
 	}
 
 	/**
-	 * Get you the first element of errors array
+	 * Get you the first element of the array errors of the field
 	 *
 	 * @param string $fieldName 	Name of field
 	 *
@@ -123,11 +137,28 @@ class EasyCheckData
 	}
 
 	/**
+	 * Get you the first element of errors array off all field
+	 *
+	 * @param string $fieldName 	Name of field
+	 *
+	 * @return string[] 	List of all first errors of variable in the object
+	 */
+	public function getFirstErrors()
+	{
+		$error = array();
+		foreach($this->error as $val)
+		{
+			$error[] = $val[0];
+		}
+		return $error;
+	}
+
+	/**
 	 * Get you the Array of errors
 	 *
 	 * @param string $fieldName 	Name of field
 	 *
-	 * @return string 	The first error
+	 * @return string[] 	The first error
 	 */
 	public function getErrors($fieldName = null)
 	{
@@ -139,7 +170,7 @@ class EasyCheckData
 	 *
 	 * @return string[]	Array with all Errors
 	 */
-	public function getAllError()
+	public function getAllsError()
 	{
 		return $this->error;
 	}
@@ -156,7 +187,7 @@ class EasyCheckData
 		$error = array();
 		$args = func_get_args();
 		for($i = 0; $i < func_num_args(); $i++){
-			$errors = $args[$i]->getAllError();
+			$errors = $args[$i]->getAllErrors();
 			foreach($errors as $val){
 				$error[] = $val;
 			}		
@@ -172,7 +203,7 @@ class EasyCheckData
 	 */
 	public function hasError()
 	{
-		return isset($this->error[0]);
+		return count($this->error)>0? true : false;
 	}
 
 	/**
@@ -243,9 +274,9 @@ class EasyCheckData
 	 *
 	 * @return reference to object
 	 */
-	public function isEqual($string, $name = "")
+	public function isEqual($var2, $name = "")
 	{
-		if($this->vars[$this->pos]['value'] !== $pass){
+		if($this->vars[$this->pos]['value'] !== $var2){
 			if($name !== ""){
 				$this->error[$this->vars[$this->pos]['name']][] = str_replace(array("%NAME%", "%NAME2%"), array($this->vars[$this->pos]['name'], $name), $this->errors["isEqual1"]);
 			} else {
@@ -263,7 +294,7 @@ class EasyCheckData
 	 */
 	public function isChecked()
 	{
-		if($this->vars[$this->pos]['value'] !== true){
+		if(!isset($this->vars[$this->pos]['value'])){
 			$this->error[$this->vars[$this->pos]['name']][] = str_replace(array("%NAME%"), array($this->vars[$this->pos]['name']), $this->errors["isChecked"]);
 		}
 
@@ -279,3 +310,11 @@ class EasyCheckData
 		return $this;
 	}
 }
+
+
+/*$avv = new EasyCheckData();
+$var = "cazzo";
+$var1 = "asdsdfreregere";
+print_r($avv->setVar($var, "Succhia")->isDef()->minLen(6)->isNumber()->getErrors());
+$avv->setVar($var1, "Cazzo")->isDef()->minLen(40)->maxLen(8)->isEmail();*/
+
