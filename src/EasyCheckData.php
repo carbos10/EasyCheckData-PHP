@@ -81,8 +81,11 @@ class EasyCheckData
 	}
 
 	/**
-	 * @param mixed 	$var 			Reference to variable
+	 *	Set the variable to check
+	 *
+	 * @param mixed 	$var 			Reference to variable (the value)
 	 * @param string 	$nameField 		Name to use in the Error strings
+	 *
 	 * @return $this
 	 */
 	public function setVar($var, $nameField)
@@ -92,11 +95,23 @@ class EasyCheckData
 		return $this;
 	}
 
+	/**
+	 * Set language to display
+	 *
+	 * @param char[2] 	$lang 		The language for display errors
+	 *
+	 * @return void
+	 */
 	public static function setLanguage($lang)
 	{
 		self::$lang = $lang;
 	}
 
+	/**
+	 * Choose the Language of errors
+	 *
+	 * @return void
+	 */
 	private function chooseErrorsLan()
 	{
 		switch(self::$lang){
@@ -106,7 +121,7 @@ class EasyCheckData
 			case "en":
 				$this->errors = $this->errorsEn;
 			default:
-				$this->errors = $this->errorsEn;
+				$this->errors = $this->errorsIt;
 				break;
 		}
 	}
@@ -203,7 +218,20 @@ class EasyCheckData
 	 */
 	public function hasError()
 	{
-		return count($this->error)>0? true : false;
+		return count($this->error) > 0 ? true : false;
+	}
+
+	/**
+	 * Control if has error in FieldName
+	 *
+	 * @param string $fieldName Name of field to check, if null is the last checked
+	 *
+	 * @return boolean 
+	 */
+	public function hasErrorInField($fieldName = null)
+	{	
+		if(!isset($fieldName)) $fieldName = $this->vars[$this->pos]['name'];
+		return count($this->error[$fieldName])> 0 ? true : false;
 	}
 
 	/**
@@ -294,13 +322,18 @@ class EasyCheckData
 	 */
 	public function isChecked()
 	{
-		if(!isset($this->vars[$this->pos]['value'])){
+		if(empty($this->vars[$this->pos]['value'])){
 			$this->error[$this->vars[$this->pos]['name']][] = str_replace(array("%NAME%"), array($this->vars[$this->pos]['name']), $this->errors["isChecked"]);
 		}
 
 		return $this;
 	}
 
+	/**
+	 * Check if the var is a Number
+	 *
+	 * @return $this 
+	 */
 	public function isNumber()
 	{
 		if(!is_numeric($this->vars[$this->pos]['value'])){
@@ -310,3 +343,4 @@ class EasyCheckData
 		return $this;
 	}
 }
+
