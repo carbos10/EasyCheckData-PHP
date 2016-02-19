@@ -7,7 +7,7 @@
 	<?php
 		error_reporting(E_ALL & ~E_NOTICE); // FOR CHECKBOX
 
-		require_once 'src/EasyCheckData.php';
+		require_once '../src/EasyCheckData.php';
 
 		if(isset($_POST['invia']))
 		{
