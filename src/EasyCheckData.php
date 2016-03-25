@@ -9,7 +9,7 @@
 /**
  * Class for EasyCheckData
  * @author Luigi Carbos
- * @version 1.5
+ * @version 1.5.1
  */
 
 class EasyCheckData 
@@ -74,7 +74,7 @@ class EasyCheckData
 	 */
 	public function __construct($var = NULL, $nameField = NULL)
 	{
-		if(isset($var) && isset($nameField)){
+		if (isset($var) && isset($nameField)) {
 			$this->setVar($var, $nameField);
 		}		
 		$this->chooseErrorsLan();
@@ -91,7 +91,7 @@ class EasyCheckData
 	public function setVar($var, $nameField)
 	{
 		$this->vars[] = array("name" => $nameField, "value" => $var);
-		$this->pos = count($this->vars)-1;
+		$this->pos = count($this->vars) - 1;
 		return $this;
 	}
 
@@ -115,9 +115,10 @@ class EasyCheckData
 	private function chooseErrorsLan()
 	{
 		switch(self::$lang){
-			case "it":
-				$this->errors = $this->errorsIt;
-				break;
+			# Just waste of memory
+			#case "it":
+			#	$this->errors = $this->errorsIt;
+			#	break;
 			case "en":
 				$this->errors = $this->errorsEn;
 			default:
@@ -161,9 +162,9 @@ class EasyCheckData
 	public function getFirstErrors()
 	{
 		$error = array();
-		foreach($this->error as $val)
+		foreach($this->error as $error_val)
 		{
-			$error[] = $val[0];
+			$error[] = $error_val[0];
 		}
 		return $error;
 	}
@@ -203,8 +204,8 @@ class EasyCheckData
 		$args = func_get_args();
 		for($i = 0; $i < func_num_args(); $i++){
 			$errors = $args[$i]->getAllErrors();
-			foreach($errors as $val){
-				$error[] = $val;
+			foreach($errors as $error_val){
+				$error[] = $error_val;
 			}		
 		}
 
@@ -343,4 +344,3 @@ class EasyCheckData
 		return $this;
 	}
 }
-
