@@ -186,7 +186,7 @@ class EasyCheckData
 	 *
 	 * @return string[]	Array with all Errors
 	 */
-	public function getAllsError()
+	public function getAllErrors()
 	{
 		return $this->error;
 	}
