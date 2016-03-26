@@ -72,16 +72,21 @@ Check if there are errors
 ```
 $ECD->hasError();
 ```
+### hasErrorInField($fieldName = null)
+Check if there are errors in a Field
+```
+$ECD->hasErrorInField();
+```
 ### getFirstError($nameField = null)
 Get you the first error found in $nameField, return String.
 N.B. if $nameField is null, get you the error of last variables checked
 ```
 $ECD->getFirstError();
 ```
-### getFirstsError()
+### getFirstErrors()
 Get you the first error of all variable in Object, return Array.
 ```
-$ECD->getFirstsError();
+$ECD->getFirstErrors();
 ```
 ### getErrors($nameField = null)
 Get you the all errors of the $nameField selected. Return Array.
