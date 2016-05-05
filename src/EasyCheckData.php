@@ -1,7 +1,7 @@
-<?php 
+<?php
 /*
  * (c) Luigi Carbos
- * 
+ *
  * License Free
  *
  */
@@ -12,21 +12,24 @@
  * @version 1.5.1
  */
 
-class EasyCheckData 
+class EasyCheckData
 {
 
 	/**
 	 * @var string[] Errors in Italian
 	 */
 	private $errorsIt = array(
-		"isDef" => "Il campo %NAME% è vuoto", 
-		"minLen" => "Il campo %NAME% deve essere minimo di %LEN% caratteri", 
+		"isDef" => "Il campo %NAME% è vuoto",
+		"minLen" => "Il campo %NAME% deve essere minimo di %LEN% caratteri",
 		"maxLen" => "Il campo %NAME% deve essere massimo di %LEN% caratteri",
 		"isEmail" => "Il campo %NAME% non è un email corretta",
 		"isEqual1" => "Il campo %NAME% non è uguale al campo %NAME2%",
 		"isEqual2" => "Il campo %NAME% non è uguale all'altro campo",
 		"isChecked" => "Il campo %NAME% non è stato selezionato",
-		"isNumber" => "Il campo %NAME% deve essere un numero"
+		"isNumber" => "Il campo %NAME% deve essere un numero",
+		"isFile" => "Il %NAME% inserito non è un file",
+		"fileUploadedMaxSize" => "%NAME% è troppo grande, deve essere inferiore a %LEN%",
+		"fileUploadedExtensionsAllowed" => "Il formato del %NAME% non è consentito, deve essere %EXTENSIONS%"
 	);
 
 	/**
@@ -34,13 +37,16 @@ class EasyCheckData
 	 */
 	private $errorsEn = array(
 		"isDef" => "The field %NAME% is empty",
-		"minLen" => "The field %NAME% must have at least %LEN% characters", 
+		"minLen" => "The field %NAME% must have at least %LEN% characters",
 		"maxLen" => "The field %NAME% must have at most %LEN% characters",
 		"isEmail" => "The field %NAME% isn't a valid email",
 		"isEqual1" => "The field %NAME% isn't equal to the field %NAME2%",
 		"isEqual2" => "The field %NAME% isn't equal to the other field",
 		"isChecked" => "The field %NAME% hasn't been selected",
-		"isNumber" => "The field %NAME% must be a number"
+		"isNumber" => "The field %NAME% must be a number",
+		"isFile" => "%NAME% is not a file",
+		"fileUploadedMaxSize" => "%NAME% is too big, it must be less than %LEN%",
+		"fileUploadedExtensionsAllowed" => "The format of %NAME% is not allowed, it must be %EXTENSIONS%"
 	);
 
 	/**
@@ -52,11 +58,11 @@ class EasyCheckData
 	 * @var string[] Errors
 	 */
 	private $errors;
-	
+
 	/**
 	 * @var int Position of the select variable
 	 */
-	private $pos; 
+	private $pos;
 
 	/**
 	 * @var mixed[] All variables to check
@@ -76,7 +82,7 @@ class EasyCheckData
 	{
 		if (isset($var) && isset($nameField)) {
 			$this->setVar($var, $nameField);
-		}		
+		}
 		$this->chooseErrorsLan();
 	}
 
@@ -98,7 +104,7 @@ class EasyCheckData
 	/**
 	 * Set language to display
 	 *
-	 * @param char[2] 	$lang 		The language for display errors
+	 * @param char[] 	$lang 		The language for display errors
 	 *
 	 * @return void
 	 */
@@ -131,7 +137,7 @@ class EasyCheckData
 	 * Change Text of Errors
 	 *
 	 * @param string $nameFunction 	Name function to change text
-	 * @param string $text 			Text to replace 
+	 * @param string $text 			Text to replace
 	 *
 	 * @return null
 	 */
@@ -196,7 +202,7 @@ class EasyCheckData
 	 *
 	 * @param multi EasyCheckData 	All EasyCheckData that you use
 	 *
-	 * @return string[]		Merging errors' array of each EasyCheckData 
+	 * @return string[]		Merging errors' array of each EasyCheckData
 	 */
 	public static function mixAllErrors()
 	{
@@ -206,7 +212,7 @@ class EasyCheckData
 			$errors = $args[$i]->getAllErrors();
 			foreach($errors as $error_val){
 				$error[] = $error_val;
-			}		
+			}
 		}
 
 		return $error;
@@ -215,7 +221,7 @@ class EasyCheckData
 	/**
 	 * Control if has error
 	 *
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function hasError()
 	{
@@ -227,16 +233,16 @@ class EasyCheckData
 	 *
 	 * @param string $fieldName Name of field to check, if null is the last checked
 	 *
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function hasErrorInField($fieldName = null)
-	{	
+	{
 		if(!isset($fieldName)) $fieldName = $this->vars[$this->pos]['name'];
 		return count($this->error[$fieldName])> 0 ? true : false;
 	}
 
 	/**
-	 * Control if is Set 
+	 * Control if is Set
 	 *
 	 * @return reference to object
 	 */
@@ -333,12 +339,78 @@ class EasyCheckData
 	/**
 	 * Check if the var is a Number
 	 *
-	 * @return $this 
+	 * @return $this
 	 */
 	public function isNumber()
 	{
 		if(!is_numeric($this->vars[$this->pos]['value'])){
 			$this->error[$this->vars[$this->pos]['name']][] = str_replace(array("%NAME%"), array($this->vars[$this->pos]['name']), $this->errors["isNumber"]);
+		}
+
+		return $this;
+	}
+
+	/**
+	* Check if is a File
+	*
+	* @return $this
+	*/
+	public function isFile()
+	{
+		if(!is_file($this->vars[$this->pos]['value'])){
+			$this->error[$this->vars[$this->pos]['name']][] = str_replace(array("%NAME%"), array($this->vars[$this->pos]['name']), $this->errors['isFile']);
+		}
+
+		return $this;
+	}
+
+	/**
+	* Check the maximum size of an Uploaded File
+	*
+	* @param 	int $len 	Maximum Length in Byte(int) or in String for KB|MB|GB like "50 GB"
+	*
+	* @return $this
+	*/
+	public function fileUploadedMaxSize($len)
+	{
+		if(is_numeric($len)){
+			$l = (int) $len;
+		} else {
+			preg_match("/([0-9]*)\s([GB|MB|KB]+)/", $len, $arr);
+			switch($arr[2]){
+				case "GB":
+					$times = 1073741824;
+					break;
+				case "MB":
+					$times = 1048576;
+					break;
+				case "KB":
+					$times = 1024;
+					break;
+			}
+			$l = $arr[1] * $times;
+		}
+		if($this->vars[$this->pos]['value']['size'] > $l){
+			$maxLen = is_numeric($len) ? $l." Byte" : $len;
+			$this->error[$this->vars[$this->pos]['name']][] = str_replace(array("%NAME%", "%LEN%"), array($this->vars[$this->pos]['name'], $maxLen), $this->errors['fileUploadedMaxSize']);
+		}
+
+		return $this;
+	}
+
+	/**
+	* Check the Extensions of a File
+	*
+	* @param string[] 	$allowed 		All extensions to check
+	*
+	* @return $this
+	*/
+	public function fileUploadedExtensionsAllowed($allowed = array())
+	{
+		$ext = pathinfo($this->vars[$this->pos]['value']['name'], PATHINFO_EXTENSION);
+		if(!in_array($ext, $allowed)){
+			$ext_allowed = implode(", ", $allowed);
+			$this->error[$this->vars[$this->pos]['name']][] = str_replace(array("%NAME%", "%EXTENSIONS%"), array($this->vars[$this->pos]['name'], $ext_allowed), $this->errors['fileUploadedExtensionsAllowed']);
 		}
 
 		return $this;
